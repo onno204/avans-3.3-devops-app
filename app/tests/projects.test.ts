@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { User } from '../models/User';
 import { NotificationWorker } from '../notifications/NotificationWorker';
 import { iSendNotification } from '../notifications/senders/iSendNotification';
@@ -55,6 +56,7 @@ describe('Projectmanagement en Scrum', () => {
   const endDate = new Date();
   endDate.setDate(endDate.getDate() + 14);
   const sprint1 = new ProjectSprint(
+    testProject,
     'Sprint 1',
     testUsers.scrumMaster,
     new Date(),
@@ -79,7 +81,7 @@ describe('Projectmanagement en Scrum', () => {
   testProject.currentActiveSprint = sprint1;
 
   // Add first 4 project backlog items to sprint
-  testProject.backlog.every((item, index) => {
+  testProject.backlog.forEach((item, index) => {
     if (index <= 4) {
       sprint1.addBacklogItem(item);
     }
@@ -90,6 +92,7 @@ describe('Projectmanagement en Scrum', () => {
     expect(testProject.productOwner).toBe(testUsers.productOwner);
   });
 
+  const sendNotificationFunction = jest.fn();
   describe('Een backlog item kan de status "todo", "doing", "ready for testing", "testing" of "done" hebben. De status "upgrade" gaat altijd in deze volgorde.', () => {
     const backlogItem = testProject.backlog[0];
     const backlogItem2 = testProject.backlog[1];
@@ -116,7 +119,6 @@ describe('Projectmanagement en Scrum', () => {
       expect(backlogItem2.moveToDoing(backlogItem.developer)).toBe(false);
     });
 
-    const sendNotificationFunction = jest.fn();
     test('Alle testers moeten een notificatie ontvangen wanneer een item naar ready-for-testing gaat.', () => {
       // Generate a mock notification worker
       const getNotificationMocker = (): iSendNotification => {
@@ -381,32 +383,66 @@ describe('Projectmanagement en Scrum', () => {
       expect(() => sprint1.setPipeline(testPipeline)).toThrow();
       expect(() => sprint1.setPipeline(deployPipeline)).not.toThrow();
     });
-    test('Nadat een review-sprint is afgerond moet er een sprint-review plaatsvinden', () => {
-      // TODO: Write test
-      expect(1).toBe(1);
+
+    test('Als de resultaten van de release-sprint minder dan 50% van de taken is uitgevoerd, wordt de sprint terminated en niet gedeployed. Ook gaat er een notificatie naar de PO & SM. & De release-sprint pipeline wordt gestart. Na het afronden van deze pipeline wordt er een notificatie gestuurd naar de PO & SM van de pipeline-status.', () => {
+      const pipelineHandlerFunction = jest.fn();
+      const pipeline = new Pipeline();
+      pipeline.isDeploymentPipeline = true;
+      pipeline.execute = pipelineHandlerFunction;
+      sprint1.setPipeline(pipeline);
+
+      sendNotificationFunction.mockClear();
+      sprint1.setReleaseSprint(true);
+      sprint1.setStatus(ProjectSprintStatus.Finished);
+
+      // Pipeline should not be called and sprint should be terminated
+      expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Terminated);
+      expect(pipelineHandlerFunction).not.toBeCalled();
+      expect(sendNotificationFunction).toBeCalled();
+
+      // Mark all backlog items as done
+      sprint1.getBacklogItems().forEach((item) => {
+        item.moveToDoing(item.developer);
+        item.moveToReadyForTesting(item.developer);
+        item.moveToTesting(testUsers.testers[0]);
+        item.moveToTested(testUsers.testers[0]);
+        item.moveToDone(testUsers.productOwner);
+      });
+      sendNotificationFunction.mockClear();
+      sprint1.setStatus(ProjectSprintStatus.Finished);
+
+      // Pipeline should be called and sprint should be Finished
+      expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Finished);
+      expect(pipelineHandlerFunction).toBeCalled();
+      expect(sendNotificationFunction).toBeCalled();
     });
-    test('Er kan na het afronden van een review-sprint een sprint-review document worden geüpload door de Scrum Master. Hierna gaat de sprint naar "completed"', () => {
-      // TODO: Write test
-      expect(1).toBe(1);
-    });
-    test('Als de resultaten van de release-sprint minder dan 50% van de taken is uitgevoerd, wordt de sprint terminated en niet gedeployed. Ook gaat er een notificatie naar de PO & SM.', () => {
-      // TODO: Write test
-      expect(1).toBe(1);
-    });
-    test('De release-sprint pipeline wordt gestart. Na het afronden van deze pipeline wordt er een notificatie gestuurd naar de PO & SM van de pipeline-status.', () => {
-      // TODO: Write test
-      expect(1).toBe(1);
+
+    test('Nadat een review-sprint is afgerond moet er een sprint-review plaatsvinden & Er kan na het afronden van een review-sprint een sprint-review document worden geüpload door de Scrum Master. Hierna gaat de sprint naar "completed"', () => {
+      sprint1.setStatus(ProjectSprintStatus.Draft);
+      expect(() => sprint1.uploadSprintReport('bla bla bla')).toThrow();
+      sprint1.setReleaseSprint(false);
+      sprint1.setStatus(ProjectSprintStatus.Finished);
+      expect(() => sprint1.setStatus(ProjectSprintStatus.Completed)).toThrow();
+
+      // A sprint must first be finished before a report can be uploaded
+      sprint1.setStatus(ProjectSprintStatus.Finished);
+      sprint1.uploadSprintReport('bla bla bla');
+      expect(() =>
+        sprint1.setStatus(ProjectSprintStatus.Completed)
+      ).not.toThrow();
     });
   });
 
   test('Een sprint kan meerdere statussen hebben: "draft", "active", "finished", "completed", "terminated"', () => {
+    sprint1.setStatus(ProjectSprintStatus.Draft);
     expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Draft);
     sprint1.setStatus(ProjectSprintStatus.Active);
     expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Active);
     sprint1.setStatus(ProjectSprintStatus.Finished);
     expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Finished);
-    sprint1.setStatus(ProjectSprintStatus.Completed);
-    expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Completed);
+    // Completed status removed because of report upload requirement, this is tested in another test
+    // sprint1.setStatus(ProjectSprintStatus.Completed);
+    // expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Completed);
     sprint1.setStatus(ProjectSprintStatus.Terminated);
     expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Terminated);
   });

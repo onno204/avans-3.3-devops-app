@@ -27,7 +27,6 @@ export class BacklogItemStateTodo extends BacklogItemState {
           item.currentState instanceof BacklogItemStateDoing
       )
     ) {
-      console.log('jsadfjkashdfkjhsadjkfa');
       return false;
     }
 

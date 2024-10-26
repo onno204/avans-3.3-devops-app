@@ -19,10 +19,8 @@ export class BacklogItemStateDoing extends BacklogItemState {
   moveToReadyForTesting(user: User): boolean {
     // Confirm all tasks for this item are done
     if (!this.backlogItem.areAllTasksFinished()) {
-      console.log('NOT ALL TASKS ARE FINISHED');
       return false;
     }
-    console.log('ALL TASKS ARE FINISHED');
     return super.moveToReadyForTesting(user);
   }
   moveToTesting(user: User): boolean {

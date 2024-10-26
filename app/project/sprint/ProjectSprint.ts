@@ -6,6 +6,8 @@ import { ProjectSprintStatus } from './ProjectSprintStatus';
 import { iSprintReportBuilder } from './reportGenerator/builder/iSprintReportBuilder';
 import { SRBDirector } from './reportGenerator/SRBDirector';
 import { Pipeline } from '../../pipelines/Pipeline';
+import { NotificationPublisher } from '../../notifications/observer/NotificationPublisher';
+import { Project } from '../Project';
 
 export class ProjectSprint {
   id: string;
@@ -15,8 +17,10 @@ export class ProjectSprint {
   private status: ProjectSprintStatus = ProjectSprintStatus.Draft;
   private isReleaseSprint: boolean = false;
   private pipeline: Pipeline | null = null;
+  private uploadedSprintReport: string | null = null;
 
   constructor(
+    private project: Project,
     private name: string,
     public readonly scrumMaster: User,
     private startDate: Date,
@@ -27,7 +31,45 @@ export class ProjectSprint {
   }
 
   setStatus(status: ProjectSprintStatus): void {
-    // TODO
+    switch (status) {
+      case ProjectSprintStatus.Completed:
+        // Require a sprint report to be uploaded before completing the sprint
+        if (!this.uploadedSprintReport) {
+          throw new Error(
+            'Sprint report must be uploaded before completing the sprint'
+          );
+        }
+        break;
+      case ProjectSprintStatus.Finished:
+        // If a sprint is finished start the pipeline
+        if (this.pipeline) {
+          if (this.isReleaseSprint) {
+            // don't start the pipeline of less than 50 percent of the backlogitems are completed
+            const completedItems = this.backLogItems.filter((item) =>
+              item.isFinished()
+            );
+            if (completedItems.length / this.backLogItems.length < 0.5) {
+              this.setStatus(ProjectSprintStatus.Terminated);
+              [this.scrumMaster, this.project.productOwner].forEach((user) => {
+                NotificationPublisher.publish(
+                  user,
+                  `Pipeline for sprint ${this.name} has not been started because less than 50% of the backlog items are completed`
+                );
+              });
+              return;
+            }
+          }
+          this.pipeline.execute();
+          [this.scrumMaster, this.project.productOwner].forEach((user) => {
+            NotificationPublisher.publish(
+              user,
+              `Pipeline for sprint ${this.name} has started`
+            );
+          });
+        }
+        break;
+    }
+
     this.status = status;
   }
 
@@ -170,5 +212,16 @@ export class ProjectSprint {
 
   getStatus(): ProjectSprintStatus {
     return this.status;
+  }
+
+  getUploadedSprintReport(): string | null {
+    return this.uploadedSprintReport;
+  }
+
+  uploadSprintReport(report: string | null): void {
+    if (this.status !== ProjectSprintStatus.Finished) {
+      throw new Error('Sprint must be finished to upload a report');
+    }
+    this.uploadedSprintReport = report;
   }
 }
