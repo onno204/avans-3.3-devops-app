@@ -59,10 +59,4 @@ describe('Pipelines', () => {
     }).toThrowError('Broken handler called');
     expect(mockHandler).not.toHaveBeenCalled();
   });
-
-  // describe("Test de notificaties en rapportage bij succes of falen van pipeline-stappen.", () => {
-  //   test("result", () => {
-  //     expect(0).toBe(0);
-  //   });
-  // });
 });
