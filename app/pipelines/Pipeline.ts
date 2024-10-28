@@ -1,4 +1,4 @@
-import { IPipelineActionHandler } from './handlers/IPipelineActionHandler';
+import { IPipelineActionHandler } from './handlers/iPipelineActionHandler';
 
 export class Pipeline {
   private handler: IPipelineActionHandler | null = null;

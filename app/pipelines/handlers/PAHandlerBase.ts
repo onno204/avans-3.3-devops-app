@@ -1,4 +1,4 @@
-import { IPipelineActionHandler } from './IPipelineActionHandler';
+import { IPipelineActionHandler } from './iPipelineActionHandler';
 
 export abstract class PAHandlerBase implements IPipelineActionHandler {
   private next: IPipelineActionHandler | null = null;
