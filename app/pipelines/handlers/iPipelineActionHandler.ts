@@ -1,3 +1,3 @@
-export interface iPipelineActionHandler {
+export interface IPipelineActionHandler {
   handle(): string[];
 }

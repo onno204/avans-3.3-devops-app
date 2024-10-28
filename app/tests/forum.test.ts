@@ -2,7 +2,7 @@ import { ForumThread } from '../forum/ForumThread';
 import { ForumThreadPost } from '../forum/ForumThreadPost';
 import { User } from '../models/User';
 import { NotificationWorker } from '../notifications/NotificationWorker';
-import { iSendNotification } from '../notifications/senders/iSendNotification';
+import { ISendNotification } from '../notifications/senders/iSendNotification';
 import { BacklogItem } from '../project/Backlog/BacklogItem';
 import { Project } from '../project/Project';
 import { ProjectSprint } from '../project/sprint/ProjectSprint';
@@ -33,7 +33,7 @@ const getTestBacklogItems = (project: Project) => {
 const sendNotificationFunction = jest.fn();
 
 // Generate a mock notification worker
-const getNotificationMocker = (): iSendNotification => {
+const getNotificationMocker = (): ISendNotification => {
   return {
     sendNotification: sendNotificationFunction,
   };

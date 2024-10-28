@@ -1,10 +1,10 @@
 import { User } from '../../../models/User';
-import { iSendNotification } from '../iSendNotification';
+import { ISendNotification } from '../iSendNotification';
 
-export class SendNotificationDecorator implements iSendNotification {
-  private wrapped: iSendNotification;
+export class SendNotificationDecorator implements ISendNotification {
+  private wrapped: ISendNotification;
 
-  constructor(wrapped: iSendNotification) {
+  constructor(wrapped: ISendNotification) {
     this.wrapped = wrapped;
   }
 

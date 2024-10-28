@@ -1,10 +1,10 @@
 import { ProjectSprint } from '../ProjectSprint';
-import { iSprintReportBuilder } from './builder/iSprintReportBuilder';
+import { ISprintReportBuilder } from './builder/iSprintReportBuilder';
 import { SRBSettings } from './SRBSettings';
 
 export class SRBDirector {
   constructor(
-    private readonly builder: iSprintReportBuilder,
+    private readonly builder: ISprintReportBuilder,
     private readonly settings: SRBSettings
   ) {}
 

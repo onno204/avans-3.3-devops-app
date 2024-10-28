@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { iRepository } from './iRepository';
+import { IRepository } from './iRepository';
 
-export class Repository<T> implements iRepository<T> {
+export class Repository<T> implements IRepository<T> {
   // In memory repository
   private repository: Array<T> = new Array<T>();
 

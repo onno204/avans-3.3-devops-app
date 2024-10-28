@@ -1,9 +1,9 @@
-import { iPipelineActionHandler } from './iPipelineActionHandler';
+import { IPipelineActionHandler } from './IPipelineActionHandler';
 
-export abstract class PAHandlerBase implements iPipelineActionHandler {
-  private next: iPipelineActionHandler | null = null;
+export abstract class PAHandlerBase implements IPipelineActionHandler {
+  private next: IPipelineActionHandler | null = null;
 
-  setNext(next: iPipelineActionHandler): void {
+  setNext(next: IPipelineActionHandler): void {
     this.next = next;
   }
 

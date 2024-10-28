@@ -1,6 +1,6 @@
 import { SCMGitRepository } from '../SCMGitRepository';
 
-export interface iSCManager {
+export interface ISCManager {
   createRepository(name: string): boolean;
   getRepositoryByName(name: string): SCMGitRepository | null;
 

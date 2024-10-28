@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Repository } from '../repositories/Repository';
-import { iRepository } from '../repositories/iRepository';
+import { IRepository } from '../repositories/iRepository';
 
 export class RepositoryController {
   // Singleton instance for getting repository instances
   private static instance: RepositoryController;
   // In memory repository for storing repositories
-  private repositories: Array<iRepository<any>> = new Array<iRepository<any>>();
+  private repositories: Array<IRepository<any>> = new Array<IRepository<any>>();
 
   // Return singleton instance
   public static getController(): RepositoryController {
@@ -16,13 +16,13 @@ export class RepositoryController {
     return RepositoryController.instance;
   }
 
-  public static get<Type>(type: Type): iRepository<Type> {
+  public static get<Type>(type: Type): IRepository<Type> {
     return RepositoryController.getController().getRepository<Type>(type);
   }
 
   // Get repository by name
-  public getRepository<Type>(type: Type): iRepository<Type> {
-    let result: null | iRepository<Type> = null;
+  public getRepository<Type>(type: Type): IRepository<Type> {
+    let result: null | IRepository<Type> = null;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.repositories.forEach((element, index) => {
       if (typeof element.getType() === typeof type) {

@@ -3,7 +3,7 @@ import { BacklogItem } from '../Backlog/BacklogItem';
 import { User } from '../../models/User';
 import { SRBSettings } from './reportGenerator/SRBSettings';
 import { ProjectSprintStatus } from './ProjectSprintStatus';
-import { iSprintReportBuilder } from './reportGenerator/builder/iSprintReportBuilder';
+import { ISprintReportBuilder } from './reportGenerator/builder/iSprintReportBuilder';
 import { SRBDirector } from './reportGenerator/SRBDirector';
 import { Pipeline } from '../../pipelines/Pipeline';
 import { NotificationPublisher } from '../../notifications/observer/NotificationPublisher';
@@ -73,7 +73,7 @@ export class ProjectSprint {
     this.status = status;
   }
 
-  generateSprintReport(builder: iSprintReportBuilder): string[] {
+  generateSprintReport(builder: ISprintReportBuilder): string[] {
     const sRBDirector = new SRBDirector(builder, this.reportSettings);
     return sRBDirector.getReport(this);
   }

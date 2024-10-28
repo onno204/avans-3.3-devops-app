@@ -1,13 +1,13 @@
 import { User } from '../models/User';
 import { NotificationWorker } from '../notifications/NotificationWorker';
 import { NotificationPublisher } from '../notifications/observer/NotificationPublisher';
-import { iSendNotification } from '../notifications/senders/iSendNotification';
+import { ISendNotification } from '../notifications/senders/iSendNotification';
 
 // Mock the sendNotification function and use it in the test with 'expect(...).toBeCalled()'
 const sendNotificationFunction = jest.fn();
 
 // Generate a mock notification worker
-const getNotificationMocker = (): iSendNotification => {
+const getNotificationMocker = (): ISendNotification => {
   return {
     sendNotification: sendNotificationFunction,
   };

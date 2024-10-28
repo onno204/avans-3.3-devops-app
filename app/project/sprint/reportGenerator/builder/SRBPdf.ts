@@ -1,7 +1,7 @@
 import { ProjectSprint } from '../../ProjectSprint';
-import { iSprintReportBuilder } from './iSprintReportBuilder';
+import { ISprintReportBuilder } from './iSprintReportBuilder';
 
-export class SRBPdf implements iSprintReportBuilder {
+export class SRBPdf implements ISprintReportBuilder {
   private header: string[] = [];
   private body: string[] = [];
   private footer: string[] = [];

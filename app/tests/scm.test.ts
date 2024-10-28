@@ -1,13 +1,13 @@
 import { RepositoryController } from '../controllers/RepositoryController';
 import { SCManagerSubversionAdapter } from '../scm/controllers/adapters/SCManagerSubversionAdapter';
-import { iSCManager } from '../scm/controllers/iSCManager';
+import { ISCManager } from '../scm/controllers/iSCManager';
 import { SCManagerGitController } from '../scm/controllers/SCManagerGitController';
 import { SCManagerSubversionController } from '../scm/controllers/SCManagerSubversionController';
 import { SCMGitRepository } from '../scm/SCMGitRepository';
 import { SCMSubversionRepository } from '../scm/SCMSubversionRepository';
 
 // Generate the Git SCM
-const getGitScm = (): iSCManager => {
+const getGitScm = (): ISCManager => {
   const repositories = RepositoryController.get<SCMGitRepository>(
     new SCMGitRepository('')
   );
@@ -15,22 +15,22 @@ const getGitScm = (): iSCManager => {
 };
 
 // Generate the Subversion SCM
-const getSubversionScm = (): iSCManager => {
+const getSubversionScm = (): ISCManager => {
   const repositories = RepositoryController.get<SCMSubversionRepository>(
     new SCMSubversionRepository('')
   );
   const subVersion = new SCManagerSubversionController(repositories);
-  const scManagerGitAdapter: iSCManager = new SCManagerSubversionAdapter(
+  const scManagerGitAdapter: ISCManager = new SCManagerSubversionAdapter(
     subVersion
   );
   return scManagerGitAdapter;
 };
 
 // Run the test for both SCM's
-const runTestForBothScm = (testScm: (scm: iSCManager) => void) => {
+const runTestForBothScm = (testScm: (scm: ISCManager) => void) => {
   // prepare
-  const scManagerGit: iSCManager = getGitScm();
-  const scManagerSubVersion: iSCManager = getSubversionScm();
+  const scManagerGit: ISCManager = getGitScm();
+  const scManagerSubVersion: ISCManager = getSubversionScm();
 
   // test
   test('Git', () => {
@@ -44,7 +44,7 @@ const runTestForBothScm = (testScm: (scm: iSCManager) => void) => {
 // The actual tests
 describe('Software Configuration Management', () => {
   describe('Er moeten verschillende systemen zoals Git en SubVersion gekoppeld kunnen worden aan het SCM.', () => {
-    runTestForBothScm((scm: iSCManager) => {
+    runTestForBothScm((scm: ISCManager) => {
       // test
       const newRepositoryName = 'setupTest';
       scm.createRepository(newRepositoryName);
@@ -57,7 +57,7 @@ describe('Software Configuration Management', () => {
   });
 
   describe('Via het SCM kan je een nieuwe repository met een naam aanmaken.', () => {
-    runTestForBothScm((scm: iSCManager) => {
+    runTestForBothScm((scm: ISCManager) => {
       //test
       const newRepositoryName = 'TestAwesomeRepository';
       scm.createRepository(newRepositoryName);
@@ -70,7 +70,7 @@ describe('Software Configuration Management', () => {
   });
 
   describe('Je kan een branch aanmaken in een repository in het SCM', () => {
-    runTestForBothScm((scm: iSCManager) => {
+    runTestForBothScm((scm: ISCManager) => {
       // create repository
       const newRepositoryName = 'TestAwesomeRepositoryasd';
       expect(scm.createRepository(newRepositoryName)).toBe(true);

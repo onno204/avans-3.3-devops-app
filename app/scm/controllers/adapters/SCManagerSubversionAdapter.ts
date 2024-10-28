@@ -1,9 +1,9 @@
 import { SCMGitRepository } from '../../SCMGitRepository';
 import { SCMSubversionRepository } from '../../SCMSubversionRepository';
-import { iSCManager } from '../iSCManager';
+import { ISCManager } from '../iSCManager';
 import { SCManagerSubversionController } from '../SCManagerSubversionController';
 
-export class SCManagerSubversionAdapter implements iSCManager {
+export class SCManagerSubversionAdapter implements ISCManager {
   constructor(private readonly scmSubversion: SCManagerSubversionController) {}
 
   createRepository(name: string): boolean {

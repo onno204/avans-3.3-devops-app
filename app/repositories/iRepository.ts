@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface iRepository<T> {
+export interface IRepository<T> {
   getAll(): Array<T>;
   getById(id: any): T | null;
   getByVariable(variable: string, value: any): T | null;

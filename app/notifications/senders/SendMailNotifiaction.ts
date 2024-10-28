@@ -1,7 +1,7 @@
 import { User } from '../../models/User';
-import { iSendNotification } from './iSendNotification';
+import { ISendNotification } from './iSendNotification';
 
-export class SendMailNotifiaction implements iSendNotification {
+export class SendMailNotifiaction implements ISendNotification {
   sendNotification(user: User, message: string): void {
     // Only send email if user has opted in
     if (!user.doNotifyEmail) {

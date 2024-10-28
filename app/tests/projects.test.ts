@@ -1,7 +1,7 @@
 import exp from 'constants';
 import { User } from '../models/User';
 import { NotificationWorker } from '../notifications/NotificationWorker';
-import { iSendNotification } from '../notifications/senders/iSendNotification';
+import { ISendNotification } from '../notifications/senders/iSendNotification';
 import { PAHandlerBuild } from '../pipelines/handlers/PAHandlerBuild';
 import { PAHandlerDeploy } from '../pipelines/handlers/PAHandlerDeploy';
 import { PAHandlerFail } from '../pipelines/handlers/PAHandlerFail';
@@ -121,7 +121,7 @@ describe('Projectmanagement en Scrum', () => {
 
     test('Alle testers moeten een notificatie ontvangen wanneer een item naar ready-for-testing gaat.', () => {
       // Generate a mock notification worker
-      const getNotificationMocker = (): iSendNotification => {
+      const getNotificationMocker = (): ISendNotification => {
         return {
           sendNotification: sendNotificationFunction,
         };

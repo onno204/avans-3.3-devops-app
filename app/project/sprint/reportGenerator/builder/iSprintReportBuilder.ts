@@ -1,6 +1,6 @@
 import { ProjectSprint } from '../../ProjectSprint';
 
-export interface iSprintReportBuilder {
+export interface ISprintReportBuilder {
   reset(): void;
   addFooterDate(date: string): void;
   addFooterVersion(version: string): void;

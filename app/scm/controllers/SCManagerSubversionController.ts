@@ -1,9 +1,9 @@
-import { iRepository } from '../../repositories/iRepository';
+import { IRepository } from '../../repositories/iRepository';
 import { SCMSubversionRepository } from '../SCMSubversionRepository';
 
 export class SCManagerSubversionController {
   constructor(
-    private readonly subversionRepositories: iRepository<SCMSubversionRepository>
+    private readonly subversionRepositories: IRepository<SCMSubversionRepository>
   ) {}
 
   createProject(name: string): boolean {

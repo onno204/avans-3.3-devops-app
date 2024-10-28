@@ -1,10 +1,10 @@
-import { iRepository } from '../../repositories/iRepository';
+import { IRepository } from '../../repositories/iRepository';
 import { SCMGitRepository } from '../SCMGitRepository';
-import { iSCManager } from './iSCManager';
+import { ISCManager } from './iSCManager';
 
-export class SCManagerGitController implements iSCManager {
+export class SCManagerGitController implements ISCManager {
   constructor(
-    private readonly gitRepositories: iRepository<SCMGitRepository>
+    private readonly gitRepositories: IRepository<SCMGitRepository>
   ) {}
 
   createRepository(name: string): boolean {

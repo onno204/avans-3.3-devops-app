@@ -1,7 +1,7 @@
 import { User } from '../../models/User';
-import { iSendNotification } from './iSendNotification';
+import { ISendNotification } from './iSendNotification';
 
-export class SendSlackNotification implements iSendNotification {
+export class SendSlackNotification implements ISendNotification {
   sendNotification(user: User, message: string): void {
     // Only send Slack notification if user has opted in
     if (!user.doNotifySlack) {

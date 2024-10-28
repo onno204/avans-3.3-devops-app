@@ -2,7 +2,7 @@ import { User } from '../models/User';
 import { SendNotificationDecoratorPrefix } from './senders/decorators/SendNotificationDecoratorPrefix';
 import { NotificationPublisher } from './observer/NotificationPublisher';
 import { NotificationSubscriber } from './observer/NotificationSubscriber';
-import { iSendNotification } from './senders/iSendNotification';
+import { ISendNotification } from './senders/iSendNotification';
 import { SendSlackNotification } from './senders/SendSlackNotification';
 import { SendMailNotifiaction } from './senders/SendMailNotifiaction';
 
@@ -10,13 +10,13 @@ import { SendMailNotifiaction } from './senders/SendMailNotifiaction';
 export class NotificationWorker {
   private static hasStarted = false;
 
-  private static handlerOverrides: { [key: string]: iSendNotification } = {};
+  private static handlerOverrides: { [key: string]: ISendNotification } = {};
 
   /**
    * This method is used to override the default handler for a given key.
    * This is useful for testing purposes.
    */
-  static addHandlerOverride(key: string, handler: iSendNotification) {
+  static addHandlerOverride(key: string, handler: ISendNotification) {
     this.handlerOverrides[key] = handler;
   }
 
@@ -77,7 +77,7 @@ export class NotificationWorker {
    * This method returns a subscriber handler function that will have a decorator added to it.
    * Public method so it can be used in tests to verify if the notification is sent.
    */
-  public static getHandlerFunction(sender: iSendNotification) {
+  public static getHandlerFunction(sender: ISendNotification) {
     return new NotificationSubscriber((user: User, message: string) => {
       // Add a prefix to the message
       const prefixDecorator = new SendNotificationDecoratorPrefix(sender);

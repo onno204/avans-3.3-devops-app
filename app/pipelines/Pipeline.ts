@@ -1,11 +1,11 @@
-import { iPipelineActionHandler } from './handlers/iPipelineActionHandler';
+import { IPipelineActionHandler } from './handlers/IPipelineActionHandler';
 
 export class Pipeline {
-  private handler: iPipelineActionHandler | null = null;
+  private handler: IPipelineActionHandler | null = null;
   public isDeploymentPipeline: boolean = false;
   public pipelineIsRunning: boolean = false;
 
-  public setPipelineHandler(handler: iPipelineActionHandler): void {
+  public setPipelineHandler(handler: IPipelineActionHandler): void {
     this.handler = handler;
   }
 
