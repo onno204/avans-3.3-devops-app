@@ -1,3 +1,4 @@
+import { PAHandlerBase } from '../pipelines/handlers/PAHandlerBase';
 import { PAHandlerBuild } from '../pipelines/handlers/PAHandlerBuild';
 import { PAHandlerDeploy } from '../pipelines/handlers/PAHandlerDeploy';
 import { PAHandlerFail } from '../pipelines/handlers/PAHandlerFail';
@@ -35,17 +36,28 @@ describe('Pipelines', () => {
     expect(output[3]).toBe('Deploy handler called');
   });
 
-  test('Een pipeline kan falen.', () => {
+  test('Als een actie in een pipeline faalt, worden de acties die hierna komen niet meer uitgevoerd.', () => {
+    const mockHandler = jest.fn();
+    // Generate a mock notification worker
+    const handlerMock = class extends PAHandlerBase {
+      handle(): string[] {
+        mockHandler();
+        return super.handle();
+      }
+    };
+
     const pipeline = new Pipeline();
     const sourceBuilder = new PAHandlerSources();
     const failHandler = new PAHandlerFail();
     pipeline.setPipelineHandler(sourceBuilder);
     sourceBuilder.setNext(failHandler);
+    failHandler.setNext(new handlerMock());
 
     // Run
     expect(() => {
       pipeline.execute();
     }).toThrowError('Broken handler called');
+    expect(mockHandler).not.toHaveBeenCalled();
   });
 
   // describe("Test de notificaties en rapportage bij succes of falen van pipeline-stappen.", () => {
