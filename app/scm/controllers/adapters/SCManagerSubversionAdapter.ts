@@ -3,6 +3,7 @@ import { SCMSubversionRepository } from '../../SCMSubversionRepository';
 import { ISCManager } from '../iSCManager';
 import { SCManagerSubversionController } from '../SCManagerSubversionController';
 
+// Pattern: Adapter
 export class SCManagerSubversionAdapter implements ISCManager {
   constructor(private readonly scmSubversion: SCManagerSubversionController) {}
 

@@ -1,6 +1,7 @@
 import { User } from '../../../models/User';
 import { ISendNotification } from '../iSendNotification';
 
+// Pattern: Decorator
 export class SendNotificationDecorator implements ISendNotification {
   constructor(private readonly wrapped: ISendNotification) {}
 

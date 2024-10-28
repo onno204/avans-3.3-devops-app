@@ -2,6 +2,7 @@ import { ProjectSprint } from '../ProjectSprint';
 import { ISprintReportBuilder } from './builder/iSprintReportBuilder';
 import { SRBSettings } from './SRBSettings';
 
+// Pattern: Builder
 export class SRBDirector {
   constructor(
     private readonly builder: ISprintReportBuilder,

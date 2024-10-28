@@ -2,6 +2,7 @@ import { User } from '../../models/User';
 import { NotificationSubscriber } from './NotificationSubscriber';
 import { NotificationWorker } from '../NotificationWorker';
 
+// Pattern: Observer
 export class NotificationPublisher {
   private static subscribers: NotificationSubscriber[] = [];
 

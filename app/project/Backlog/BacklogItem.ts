@@ -10,6 +10,7 @@ import { BacklogItemTask } from './BacklogItemTask';
 import { BacklogItemStateTesting } from './states/BacklogItemStateTesting';
 import { BacklogItemStateDone } from './states/BacklogItemStateDone';
 
+// Pattern: State
 export class BacklogItem {
   readonly id: string;
   currentState: BacklogItemState;
