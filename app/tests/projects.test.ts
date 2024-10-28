@@ -384,11 +384,46 @@ describe('Projectmanagement en Scrum', () => {
       expect(() => sprint1.setPipeline(deployPipeline)).not.toThrow();
     });
 
-    test('Als de resultaten van de release-sprint minder dan 50% van de taken is uitgevoerd, wordt de sprint terminated en niet gedeployed. Ook gaat er een notificatie naar de PO & SM. & De release-sprint pipeline wordt gestart. Na het afronden van deze pipeline wordt er een notificatie gestuurd naar de PO & SM van de pipeline-status.', () => {
+    test('Als de resultaten van de release-sprint minder dan 50% van de taken is uitgevoerd, wordt de sprint terminated en dus ook niet gedeployed.', () => {
       const pipelineHandlerFunction = jest.fn();
       const pipeline = new Pipeline();
       pipeline.isDeploymentPipeline = true;
       pipeline.execute = pipelineHandlerFunction;
+      sprint1.setPipeline(pipeline);
+
+      sprint1.setReleaseSprint(true);
+      sprint1.setStatus(ProjectSprintStatus.Finished);
+
+      // Pipeline should not be called and sprint should be terminated
+      expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Terminated);
+      expect(pipelineHandlerFunction).not.toBeCalled();
+
+      // Mark all backlog items as done
+      sprint1.getBacklogItems().forEach((item) => {
+        item.moveToDoing(item.developer);
+        item.moveToReadyForTesting(item.developer);
+        item.moveToTesting(testUsers.testers[0]);
+        item.moveToTested(testUsers.testers[0]);
+        item.moveToDone(testUsers.productOwner);
+      });
+      sprint1.setStatus(ProjectSprintStatus.Finished);
+
+      // Pipeline should be called and sprint should be Finished
+      expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Finished);
+      expect(pipelineHandlerFunction).toBeCalled();
+    });
+
+    test('Wanneer de sprint status naar terminated wordt veranderd moet er een notificatie worden gestuurd naar de PO & SM.', () => {
+      sprint1.setStatus(ProjectSprintStatus.Draft);
+
+      // Change all backlog items to doing
+      sprint1.getBacklogItems().forEach((item) => {
+        item.currentState = item.doingState;
+      });
+
+      const pipeline = new Pipeline();
+      pipeline.setPipelineHandler(new PAHandlerSources());
+      pipeline.isDeploymentPipeline = true;
       sprint1.setPipeline(pipeline);
 
       sendNotificationFunction.mockClear();
@@ -397,7 +432,6 @@ describe('Projectmanagement en Scrum', () => {
 
       // Pipeline should not be called and sprint should be terminated
       expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Terminated);
-      expect(pipelineHandlerFunction).not.toBeCalled();
       expect(sendNotificationFunction).toBeCalled();
 
       // Mark all backlog items as done
@@ -413,7 +447,6 @@ describe('Projectmanagement en Scrum', () => {
 
       // Pipeline should be called and sprint should be Finished
       expect(sprint1.getStatus()).toBe(ProjectSprintStatus.Finished);
-      expect(pipelineHandlerFunction).toBeCalled();
       expect(sendNotificationFunction).toBeCalled();
     });
 
