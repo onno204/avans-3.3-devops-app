@@ -4,7 +4,7 @@ import { BacklogItem } from '../project/Backlog/BacklogItem';
 import { ForumThreadPost } from './ForumThreadPost';
 
 export class ForumThread {
-  private posts: ForumThreadPost[] = [];
+  private readonly posts: ForumThreadPost[] = [];
 
   constructor(
     public readonly title: string,

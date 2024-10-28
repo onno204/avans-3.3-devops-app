@@ -20,7 +20,7 @@ export class ProjectSprint {
   private uploadedSprintReport: string | null = null;
 
   constructor(
-    private project: Project,
+    private readonly project: Project,
     private name: string,
     public readonly scrumMaster: User,
     private startDate: Date,

@@ -2,7 +2,7 @@ import { Project } from '../project/Project';
 import { ForumThread } from './ForumThread';
 
 export class Forum {
-  private threads: ForumThread[] = [];
+  private readonly threads: ForumThread[] = [];
 
   constructor(private readonly project: Project) {}
 

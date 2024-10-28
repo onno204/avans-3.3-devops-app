@@ -6,7 +6,9 @@ export class RepositoryController {
   // Singleton instance for getting repository instances
   private static instance: RepositoryController;
   // In memory repository for storing repositories
-  private repositories: Array<IRepository<any>> = new Array<IRepository<any>>();
+  private readonly repositories: Array<IRepository<any>> = new Array<
+    IRepository<any>
+  >();
 
   // Return singleton instance
   public static getController(): RepositoryController {
