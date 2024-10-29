@@ -115,6 +115,14 @@ describe('Projectmanagement en Scrum', () => {
       expect(backlogItem.moveToDoing(backlogItem.developer)).toBe(true);
     });
 
+    test('Een taak kan van doing alleen door naar ready-for-testing', () => {
+      expect(backlogItem.moveToTodo(backlogItem.developer)).toBe(false);
+      expect(backlogItem.moveToDoing(backlogItem.developer)).toBe(false);
+      expect(backlogItem.moveToTested(backlogItem.developer)).toBe(false);
+      expect(backlogItem.moveToTesting(backlogItem.developer)).toBe(false);
+      expect(backlogItem.moveToTodo(backlogItem.developer)).toBe(false);
+    });
+
     test('Een backlog mag alleen naar doing wanneer de gekoppelde developer geen andere taken met "doing" heeft.', () => {
       expect(backlogItem2.moveToDoing(backlogItem.developer)).toBe(false);
     });

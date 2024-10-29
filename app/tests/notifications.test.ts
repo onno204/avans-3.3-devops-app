@@ -45,7 +45,7 @@ describe('Notificaties', () => {
     );
   });
 
-  test('Geen gebruiker moet slack notificaties uit kunnen zetten', () => {
+  test('Een gebruiker moet slack notificaties uit kunnen zetten', () => {
     // Remove handler override
     NotificationWorker.removeHandlerOverride('slack');
     NotificationWorker.reset();
@@ -69,7 +69,7 @@ describe('Notificaties', () => {
     );
   });
 
-  test('Geen gebruiker moet mail notificaties uit kunnen zetten', () => {
+  test('Een gebruiker moet mail notificaties uit kunnen zetten', () => {
     // Remove handler override
     NotificationWorker.removeHandlerOverride('mail');
     NotificationWorker.reset();
