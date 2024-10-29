@@ -44,4 +44,52 @@ describe('Notificaties', () => {
       'you have a new message:'
     );
   });
+
+  test('Geen gebruiker moet slack notificaties uit kunnen zetten', () => {
+    // Remove handler override
+    NotificationWorker.removeHandlerOverride('slack');
+    NotificationWorker.reset();
+    // Add mock function to console.log to check if it is called
+    console.log = jest.fn();
+
+    // Send test notification
+    NotificationPublisher.publish(testUser, 'Test message!');
+    expect(console.log).toBeCalledWith(
+      expect.stringContaining('Sending Slack notification to Test User')
+    );
+
+    // Reset console.log
+    console.log = jest.fn();
+
+    // Turn off slack notifications
+    testUser.doNotifySlack = false;
+    NotificationPublisher.publish(testUser, 'Test message!');
+    expect(console.log).not.toBeCalledWith(
+      expect.stringContaining('Sending Slack notification to Test User')
+    );
+  });
+
+  test('Geen gebruiker moet mail notificaties uit kunnen zetten', () => {
+    // Remove handler override
+    NotificationWorker.removeHandlerOverride('mail');
+    NotificationWorker.reset();
+    // Add mock function to console.log to check if it is called
+    console.log = jest.fn();
+
+    // Send test notification
+    NotificationPublisher.publish(testUser, 'Test message!');
+    expect(console.log).toBeCalledWith(
+      expect.stringContaining('Sending mail notification to Test User')
+    );
+
+    // Reset console.log
+    console.log = jest.fn();
+
+    // Turn off mail notifications
+    testUser.doNotifyEmail = false;
+    NotificationPublisher.publish(testUser, 'Test message!');
+    expect(console.log).not.toBeCalledWith(
+      expect.stringContaining('Sending mail notification to Test User')
+    );
+  });
 });

@@ -4,7 +4,7 @@ import { NotificationPublisher } from './observer/NotificationPublisher';
 import { NotificationSubscriber } from './observer/NotificationSubscriber';
 import { ISendNotification } from './senders/iSendNotification';
 import { SendSlackNotification } from './senders/SendSlackNotification';
-import { SendMailNotifiaction } from './senders/SendMailNotifiaction';
+import { SendMailNotification } from './senders/SendMailNotification';
 
 // Used to start the notification subscribers
 export class NotificationWorker {
@@ -18,6 +18,10 @@ export class NotificationWorker {
    */
   static addHandlerOverride(key: string, handler: ISendNotification) {
     this.handlerOverrides[key] = handler;
+  }
+
+  static removeHandlerOverride(key: string) {
+    delete this.handlerOverrides[key];
   }
 
   /**
@@ -67,7 +71,7 @@ export class NotificationWorker {
       case 'slack':
         return new SendSlackNotification();
       case 'mail':
-        return new SendMailNotifiaction();
+        return new SendMailNotification();
       default:
         throw new Error(`Unknown handler: ${key}`);
     }

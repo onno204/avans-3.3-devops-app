@@ -5,8 +5,8 @@ export class User {
 
   constructor(
     public readonly name: string,
-    public readonly doNotifyEmail: boolean,
-    public readonly doNotifySlack: boolean
+    public doNotifyEmail: boolean,
+    public doNotifySlack: boolean
   ) {
     this.id = uuidv4();
   }
