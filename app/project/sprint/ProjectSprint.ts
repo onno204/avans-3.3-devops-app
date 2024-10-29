@@ -83,7 +83,7 @@ export class ProjectSprint {
   //////////////////////////////////////////////////////
 
   // Sprint can be edited when it is in draft status and the pipeline is not running
-  canBeEdited(): boolean {
+  private canBeEdited(): boolean {
     let canBeEdited = this.status === ProjectSprintStatus.Draft;
     if (this.pipeline) {
       canBeEdited = canBeEdited && !this.pipeline.pipelineIsRunning;
